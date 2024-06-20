@@ -7,13 +7,16 @@ import { z } from 'zod';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 import { Form } from '@/components/ui/form';
-import { aspectRatioOptions, defaultValues, transformationTypes } from '@/constants';
+import { aspectRatioOptions, creditFee, defaultValues, transformationTypes } from '@/constants';
+import { updateCredits } from '@/lib/actions/user.actions';
 import { AspectRatioKey, debounce, deepMergeObjects } from '@/lib/utils';
+import { title } from 'process';
 import { useState, useTransition } from 'react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { CustomField } from './CustomField';
 import MediaUploader from './MediaUploader';
+import TransformedImage from './TransformedImage';
 
 export const formSchema = z.object({
   title: z.string(),
@@ -91,14 +94,14 @@ const TransformationForm = ({
     }, 1000);
   };
 
-  // TODO: Return to updateCredits
+  // TODO: Update creditFee to something else
   const onTransformHandler = async () => {
     setIsTransforming(true);
 
     setTransformationConfig(deepMergeObjects(newTransformation, transformationConfig));
 
     setNewTransformation(null);
-    // startTransition(async () => await updateCredits(userId, creditFee));
+    startTransition(async () => await updateCredits(userId, creditFee));
   };
 
   return (
@@ -183,6 +186,15 @@ const TransformationForm = ({
                 type={type}
               />
             )}
+          />
+
+          <TransformedImage
+            image={image}
+            type={type}
+            title={title}
+            isTransforming={isTransforming}
+            setIsTransforming={setIsTransforming}
+            transformationConfig={transformationConfig}
           />
         </div>
 
