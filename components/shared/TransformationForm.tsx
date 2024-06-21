@@ -14,10 +14,11 @@ import { AspectRatioKey, debounce, deepMergeObjects } from '@/lib/utils';
 import { getCldImageUrl } from 'next-cloudinary';
 import { useRouter } from 'next/navigation';
 import { title } from 'process';
-import { useState, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { CustomField } from './CustomField';
+import { InsufficientCreditsModal } from './InsufficientCreditsModal';
 import MediaUploader from './MediaUploader';
 import TransformedImage from './TransformedImage';
 
@@ -153,19 +154,27 @@ const TransformationForm = ({
     }, 1000);
   };
 
-  // TODO: Update creditFee to something else
   const onTransformHandler = async () => {
     setIsTransforming(true);
 
     setTransformationConfig(deepMergeObjects(newTransformation, transformationConfig));
 
     setNewTransformation(null);
+
     startTransition(async () => await updateCredits(userId, creditFee));
   };
+
+  useEffect(() => {
+    if (image && (type === 'restore' || type === 'removeBackground')) {
+      setNewTransformation(transformationType.config);
+    }
+  }, [image, transformationType.config, type]);
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        {creditBalance < Math.abs(creditFee) && <InsufficientCreditsModal />}
+
         <CustomField
           control={form.control}
           name="title"
