@@ -8,7 +8,8 @@ import User from '../database/models/user.model';
 import { connectToDatabase } from '../database/mongoose';
 import { handleError } from '../utils';
 
-const populateUser = (query: any) => query.populate({ path: 'author', model: User, select: '_id fistName lastName' });
+const populateUser = (query: any) =>
+  query.populate({ path: 'author', model: User, select: '_id fistName lastName clerkId' });
 
 // ADD IMAGE
 export async function addImage({ image, userId, path }: AddImageParams) {
