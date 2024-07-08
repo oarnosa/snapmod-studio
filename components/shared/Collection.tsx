@@ -89,7 +89,15 @@ export const Collection = ({
 const Card = ({ image }: { image: IImage }) => {
   return (
     <li>
-      <Link href={`/transformations/${image._id}`} className="collection-card">
+      <Link href={`/transformations/${image._id}`} className="collection-card relative">
+        <div className="absolute top-2 right-2 w-10 h-10 bg-white/80 flex justify-center rounded-full">
+          <Image
+            src={`/assets/icons/${transformationTypes[image.transformationType as TransformationTypeKey].icon}`}
+            alt={image.title}
+            width={24}
+            height={24}
+          />
+        </div>
         <CldImage
           src={image.publicId}
           alt={image.title}
@@ -100,15 +108,6 @@ const Card = ({ image }: { image: IImage }) => {
           className="h-52 w-full rounded-[10px] object-cover"
           sizes="(max-width: 767px) 100vw, (max-width: 1279px) 50vw, 33vw"
         />
-        <div className="flex-between">
-          <p className="p-20-semibold mr-3 line-clamp-1 text-dark-600">{image.title}</p>
-          <Image
-            src={`/assets/icons/${transformationTypes[image.transformationType as TransformationTypeKey].icon}`}
-            alt={image.title}
-            width={24}
-            height={24}
-          />
-        </div>
       </Link>
     </li>
   );
